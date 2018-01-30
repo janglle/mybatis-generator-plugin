@@ -1,4 +1,4 @@
-package com.janglle.mybatis.generator.plugins;
+package com.github.janglle.mbg.plugins;
 
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;

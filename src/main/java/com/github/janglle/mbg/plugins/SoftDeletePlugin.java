@@ -1,4 +1,4 @@
-package com.janglle.mybatis.generator.plugins;
+package com.github.janglle.mbg.plugins;
 
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
@@ -9,7 +9,9 @@ import org.mybatis.generator.api.dom.xml.TextElement;
 import org.mybatis.generator.api.dom.xml.XmlElement;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * soft delete by a specified column, and select, update method generated will filter this column.

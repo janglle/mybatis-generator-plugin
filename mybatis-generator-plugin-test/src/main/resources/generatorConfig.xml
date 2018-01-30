@@ -7,15 +7,15 @@
     <!-- !!!! Driver Class Path !!!! -->
     <classPathEntry location="C:/Users/admin/.m2/repository/mysql/mysql-connector-java/5.1.44/mysql-connector-java-5.1.44.jar"/>
 
-    <context id="context" targetRuntime="MyBatis3DynamicSql">
+    <context id="context" targetRuntime="MyBatis3">
         <property name="javaFileEncoding" value="UTF-8"/>
         <property name="beginningDelimiter" value="`"/>
         <property name="endingDelimiter" value="`"/>
-        <plugin type="com.janglle.mybatis.generator.plugins.SoftDeletePlugin">
+        <plugin type="com.github.janglle.mbg.plugins.SoftDeletePlugin">
             <property name="column" value="valid"/>
         </plugin>
-        <plugin type="com.janglle.mybatis.generator.plugins.FireAlibabaCodingGuidelinesPlugin"/>
-        <plugin type="com.janglle.mybatis.generator.plugins.ExampleIgnoreNullPlugin"/>
+        <plugin type="com.github.janglle.mbg.plugins.FireAlibabaCodingGuidelinesPlugin"/>
+        <plugin type="com.github.janglle.mbg.plugins.ExampleIgnoreNullPlugin"/>
         <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
         <commentGenerator>
             <property name="suppressAllComments" value="false"/>
@@ -24,30 +24,32 @@
         </commentGenerator>
 
         <!-- !!!! Database Configurations !!!! -->
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/testdb?useSSL=false&amp;useUnicode=true&amp;characterEncoding=UTF-8" userId="root" password="root"/>
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://192.168.60.102:3306/broker_db?useSSL=false&amp;useUnicode=true&amp;characterEncoding=UTF-8"
+                        userId="eqOne" password="eqOne"/>
 
         <javaTypeResolver>
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
 
         <!-- !!!! Model Configurations !!!! -->
-        <javaModelGenerator targetPackage="com.janglle.test.entity" targetProject="MAVEN">
+        <javaModelGenerator targetPackage="com.github.janglle.test.entity" targetProject="MAVEN">
             <property name="enableSubPackages" value="false"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
         <!-- !!!! Mapper XML Configurations !!!! -->
-        <sqlMapGenerator targetPackage="com.janglle.test.mapper" targetProject="MAVEN">
+        <sqlMapGenerator targetPackage="com.github.janglle.test.mapper" targetProject="MAVEN">
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
 
         <!-- !!!! Mapper Interface Configurations !!!! -->
-        <javaClientGenerator targetPackage="com.janglle.test.mapper" targetProject="MAVEN" type="XMLMAPPER">
+        <javaClientGenerator targetPackage="com.github.janglle.test.mapper" targetProject="MAVEN" type="XMLMAPPER">
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
 
         <!-- !!!! Table Configurations !!!! -->
-        <table tableName="user_punish">
+        <table tableName="user_broker">
             <property name="useActualColumnNames" value="true"/>
             <generatedKey column="id" sqlStatement="JDBC" identity="true" />
             <domainObjectRenamingRule searchString="$" replaceString="Entity" />
