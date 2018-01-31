@@ -13,6 +13,7 @@
         <property name="endingDelimiter" value="`"/>
         <plugin type="com.github.janglle.mbg.plugins.SoftDeletePlugin">
             <property name="column" value="valid"/>
+            <property name="ignoreColInModel" value="true"/>
         </plugin>
         <plugin type="com.github.janglle.mbg.plugins.FireAlibabaCodingGuidelinesPlugin"/>
         <plugin type="com.github.janglle.mbg.plugins.ExampleIgnoreNullPlugin"/>

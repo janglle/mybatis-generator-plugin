@@ -17,17 +17,38 @@ import java.util.Properties;
  * soft delete by a specified column, and select, update method generated will filter this column.
  * this column should be defined in mybatis generator config xml as below, where the words "deleted" should be replaced with your own:
  * <plugin type="com.mgzf.mybatis.generator.plugins.SoftDeletePlugin">
- *     <property name="column" value="deleted"/>
+ * <property name="column" value="deleted"/>
  * </plugin>
+ *
  * @author jangle at 2018/1/29 19:04
  */
 public class SoftDeletePlugin extends PluginAdapter {
     private String col;
+    private boolean ignoreColInModel = true;
+
+    private boolean hasCol = false;
 
     @Override
     public void setProperties(Properties properties) {
         super.setProperties(properties);
         col = properties.getProperty("column");
+        String property = properties.getProperty("ignoreColInModel", "true");
+        ignoreColInModel = Boolean.parseBoolean(property);
+    }
+
+    @Override
+    public void initialized(IntrospectedTable introspectedTable) {
+        if (ignoreColInModel) {
+            List<IntrospectedColumn> baseColumns = introspectedTable.getBaseColumns();
+            Iterator<IntrospectedColumn> it = baseColumns.iterator();
+            while (it.hasNext()) {
+                String actualColumnName = it.next().getActualColumnName();
+                if (actualColumnName != null && actualColumnName.equalsIgnoreCase(col)) {
+                    hasCol = true;
+                    it.remove();
+                }
+            }
+        }
     }
 
     @Override
@@ -37,8 +58,7 @@ public class SoftDeletePlugin extends PluginAdapter {
 
     @Override
     public boolean sqlMapExampleWhereClauseElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-        IntrospectedColumn column = introspectedTable.getColumn(col);
-        if (column != null) {
+        if (hasCol) {
             List<Element> elements = element.getElements();
             for (Element e : elements) {
                 if (e instanceof XmlElement) {
@@ -77,8 +97,7 @@ public class SoftDeletePlugin extends PluginAdapter {
     }
 
     private void sqlMapWhereIdAndNotSoftDelete(XmlElement element, IntrospectedTable introspectedTable) {
-        IntrospectedColumn column = introspectedTable.getColumn(col);
-        if (column == null) {
+        if (!hasCol) {
             return;
         }
         List<Element> elements = element.getElements();
@@ -110,8 +129,7 @@ public class SoftDeletePlugin extends PluginAdapter {
     }
 
     private void sqlMapDeleteSoft(XmlElement element, IntrospectedTable introspectedTable) {
-        IntrospectedColumn column = introspectedTable.getColumn(col);
-        if (column == null) {
+        if (!hasCol) {
             return;
         }
         List<Element> elements = element.getElements();
