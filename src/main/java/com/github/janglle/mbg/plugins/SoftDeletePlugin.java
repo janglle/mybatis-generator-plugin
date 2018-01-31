@@ -8,7 +8,6 @@ import org.mybatis.generator.api.dom.xml.Element;
 import org.mybatis.generator.api.dom.xml.TextElement;
 import org.mybatis.generator.api.dom.xml.XmlElement;
 
-import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -133,39 +132,49 @@ public class SoftDeletePlugin extends PluginAdapter {
 
     @Override
     public boolean sqlMapDeleteByPrimaryKeyElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-        sqlMapDeleteSoft(element, introspectedTable);
+        if (hasCol) {
+            List<Element> elements = element.getElements();
+            for (int i = 0; i < elements.size(); i++) {
+                Element ele = elements.get(i);
+                if (!(ele instanceof TextElement)) {
+                    continue;
+                }
+                TextElement e = (TextElement) ele;
+                String content = e.getContent();
+                if (content == null) {
+                    continue;
+                }
+                if (content.startsWith("delete")) {
+                    elements.set(i, new TextElement(content.replace("delete from", "update") + " set " + col + " = 0"));
+                }
+                if (content.startsWith("where id = ")) {
+                    elements.set(i, new TextElement(content + " AND " + col + " = 1"));
+                }
+            }
+        }
         return true;
     }
 
     @Override
     public boolean sqlMapDeleteByExampleElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
-        sqlMapDeleteSoft(element, introspectedTable);
-        return true;
-    }
-
-    private void sqlMapDeleteSoft(XmlElement element, IntrospectedTable introspectedTable) {
-        if (!hasCol) {
-            return;
-        }
-        List<Element> elements = element.getElements();
-        for (Element next : elements) {
-            if (next instanceof TextElement) {
-                TextElement e = (TextElement) next;
+        if (hasCol) {
+            List<Element> elements = element.getElements();
+            for (int i = 0; i < elements.size(); i++) {
+                Element ele = elements.get(i);
+                if (!(ele instanceof TextElement)) {
+                    continue;
+                }
+                TextElement e = (TextElement) ele;
                 String content = e.getContent();
-                if (content != null && content.startsWith("delete")) {
-                    try {
-                        Field field = e.getClass().getDeclaredField("content");
-                        field.setAccessible(true);
-                        field.set(e, content.replace("delete from", "update") + " set " + col + " = 0");
-                        break;
-                    } catch (NoSuchFieldException e1) {
-                        e1.printStackTrace();
-                    } catch (IllegalAccessException e1) {
-                        e1.printStackTrace();
-                    }
+                if (content == null) {
+                    continue;
+                }
+                if (content.startsWith("delete")) {
+                    elements.set(i, new TextElement(content.replace("delete from", "update") + " set " + col + " = 0"));
                 }
             }
         }
+        return true;
     }
 
 }
