@@ -16,6 +16,7 @@
         </plugin>
         <plugin type="com.github.janglle.mbg.plugins.FireAlibabaCodingGuidelinesPlugin"/>
         <plugin type="com.github.janglle.mbg.plugins.ExampleIgnoreNullPlugin"/>
+        <plugin type="com.github.janglle.mbg.plugins.ModelCommentsOnlyRemarksPlugin"/>
         <plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>
         <commentGenerator>
             <property name="suppressAllComments" value="false"/>
