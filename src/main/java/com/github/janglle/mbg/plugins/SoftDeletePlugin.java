@@ -52,15 +52,16 @@ public class SoftDeletePlugin extends PluginAdapter {
 
     @Override
     public void initialized(IntrospectedTable introspectedTable) {
-        if (ignoreColInModel) {
-            List<IntrospectedColumn> baseColumns = introspectedTable.getBaseColumns();
-            Iterator<IntrospectedColumn> it = baseColumns.iterator();
-            while (it.hasNext()) {
-                String actualColumnName = it.next().getActualColumnName();
-                if (actualColumnName != null && actualColumnName.equalsIgnoreCase(col)) {
-                    hasCol = true;
+        List<IntrospectedColumn> baseColumns = introspectedTable.getBaseColumns();
+        Iterator<IntrospectedColumn> it = baseColumns.iterator();
+        while (it.hasNext()) {
+            String actualColumnName = it.next().getActualColumnName();
+            if (actualColumnName != null && actualColumnName.equalsIgnoreCase(col)) {
+                hasCol = true;
+                if (ignoreColInModel) {
                     it.remove();
                 }
+                break;
             }
         }
     }
