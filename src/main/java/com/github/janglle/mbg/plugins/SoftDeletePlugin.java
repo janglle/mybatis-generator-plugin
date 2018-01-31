@@ -23,11 +23,26 @@ import java.util.Properties;
  * @author jangle at 2018/1/29 19:04
  */
 public class SoftDeletePlugin extends PluginAdapter {
+    /**
+     * can be set from mybatis-generator config xml.
+     * the column name which used to indicate whether the record is deleted or not.
+     */
     private String col;
+    /**
+     * can be set from mybatis-generator config xml.
+     * if true, the model(entity) class and example class will not generate this delete mark column.
+     */
     private boolean ignoreColInModel = true;
-
+    /**
+     * used to determine whether it is needed to rewrite sqlMap
+     */
     private boolean hasCol = false;
 
+    /**
+     * set col and ignoreColInModel
+     *
+     * @param properties
+     */
     @Override
     public void setProperties(Properties properties) {
         super.setProperties(properties);
